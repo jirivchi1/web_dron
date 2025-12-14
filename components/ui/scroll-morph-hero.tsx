@@ -266,6 +266,88 @@ export default function IntroAnimation() {
                     </motion.p>
                 </div>
 
+                {/* Category Labels - Only visible during circle phase */}
+                {introPhase === "circle" && morphValue < 0.5 && (
+                    <>
+                        {/* Define 4 categories at specific positions around the circle */}
+                        {[
+                            { label: "Bodas", index: 0 },
+                            { label: "Agricultura", index: 5 },
+                            { label: "Deporte", index: 10 },
+                            { label: "Otros", index: 15 }
+                        ].map(({ label, index }) => {
+                            const minDimension = Math.min(containerSize.width, containerSize.height);
+                            const circleRadius = Math.min(minDimension * 0.35, 350);
+                            const circleAngle = (index / TOTAL_IMAGES) * 360;
+                            const circleRad = (circleAngle * Math.PI) / 180;
+
+                            // Image position on the circle
+                            const imageX = Math.cos(circleRad) * circleRadius;
+                            const imageY = Math.sin(circleRad) * circleRadius;
+
+                            // Label position - further out from the circle
+                            const labelRadius = circleRadius + 100;
+                            const labelX = Math.cos(circleRad) * labelRadius;
+                            const labelY = Math.sin(circleRad) * labelRadius;
+
+                            // Line start (from label area)
+                            const lineStartRadius = circleRadius + 90;
+                            const lineStartX = Math.cos(circleRad) * lineStartRadius;
+                            const lineStartY = Math.sin(circleRad) * lineStartRadius;
+
+                            // Line end (near the image)
+                            const lineEndRadius = circleRadius + 20;
+                            const lineEndX = Math.cos(circleRad) * lineEndRadius;
+                            const lineEndY = Math.sin(circleRad) * lineEndRadius;
+
+                            return (
+                                <motion.div
+                                    key={label}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 0.6 - morphValue * 1.2 }}
+                                    transition={{ duration: 0.5, delay: 0.8 }}
+                                    className="absolute pointer-events-none"
+                                    style={{
+                                        left: '50%',
+                                        top: '50%',
+                                    }}
+                                >
+                                    {/* Line pointing to the image */}
+                                    <svg
+                                        className="absolute"
+                                        style={{
+                                            left: 0,
+                                            top: 0,
+                                            width: '100%',
+                                            height: '100%',
+                                            overflow: 'visible'
+                                        }}
+                                    >
+                                        <line
+                                            x1={lineStartX}
+                                            y1={lineStartY}
+                                            x2={lineEndX}
+                                            y2={lineEndY}
+                                            stroke="#1F2937"
+                                            strokeWidth="1.5"
+                                        />
+                                    </svg>
+
+                                    {/* Label */}
+                                    <div
+                                        className="absolute text-[10px] md:text-xs font-medium tracking-[0.25em] text-gray-700 whitespace-nowrap"
+                                        style={{
+                                            transform: `translate(${labelX}px, ${labelY}px) translate(-50%, -50%)`
+                                        }}
+                                    >
+                                        {label}
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </>
+                )}
+
                 {/* Arc Active Content */}
                 <motion.div
                     style={{ opacity: contentOpacity, y: contentY }}
