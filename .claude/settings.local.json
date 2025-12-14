@@ -3,7 +3,9 @@
     "allow": [
       "Bash(dir:*)",
       "Bash(npx create-next-app:*)",
-      "Bash(node --version:*)"
+      "Bash(node --version:*)",
+      "Bash(git add:*)",
+      "Bash(if exist nul del nul)"
     ],
     "deny": [],
     "ask": []

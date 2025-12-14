@@ -12,6 +12,7 @@ interface FlipCardProps {
     total: number;
     phase: AnimationPhase;
     target: { x: number; y: number; rotation: number; scale: number; opacity: number };
+    onClick: () => void;
 }
 
 // --- FlipCard Component ---
@@ -22,6 +23,7 @@ function FlipCard({
     src,
     index,
     target,
+    onClick,
 }: FlipCardProps) {
     return (
         <motion.div
@@ -45,6 +47,7 @@ function FlipCard({
                 perspective: "1000px",
             }}
             className="cursor-pointer group"
+            onClick={onClick}
         >
             <motion.div
                 className="relative h-full w-full"
@@ -84,28 +87,35 @@ function FlipCard({
 const TOTAL_IMAGES = 20;
 const MAX_SCROLL = 3000;
 
-// Drone-related images from Unsplash
-const IMAGES = [
-    "https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=300&q=80",
-    "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=300&q=80",
-    "https://images.unsplash.com/photo-1579829366248-204fe8413f31?w=300&q=80",
-    "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?w=300&q=80",
-    "https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=300&q=80",
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&q=80",
-    "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=300&q=80",
-    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&q=80",
-    "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=300&q=80",
-    "https://images.unsplash.com/photo-1682687220499-d9c06b4fa584?w=300&q=80",
-    "https://images.unsplash.com/photo-1682687982501-1e58ab814714?w=300&q=80",
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&q=80",
-    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&q=80",
-    "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&q=80",
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&q=80",
-    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&q=80",
-    "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&q=80",
-    "https://images.unsplash.com/photo-1500485035595-cbe6f645feb1?w=300&q=80",
-    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=300&q=80",
-    "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=300&q=80",
+// Media items: thumbnails from Unsplash, videos from local
+const MEDIA_ITEMS = [
+    // Bodas
+    { thumbnail: "https://images.unsplash.com/photo-1519741497674-611481863552?w=300&q=80", video: "/videos/boda1.mp4", category: "Bodas" },
+    { thumbnail: "https://images.unsplash.com/photo-1606800052052-a08af7148866?w=300&q=80", video: "/videos/boda2.mp4", category: "Bodas" },
+    { thumbnail: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=300&q=80", video: "/videos/boda3.mp4", category: "Bodas" },
+    { thumbnail: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=300&q=80", video: "/videos/boda4.mp4", category: "Bodas" },
+    { thumbnail: "https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=300&q=80", video: "/videos/boda5.mp4", category: "Bodas" },
+
+    // Agricultura
+    { thumbnail: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&q=80", video: "/videos/agricultura1.mp4", category: "Agricultura" },
+    { thumbnail: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=300&q=80", video: "/videos/agricultura2.mp4", category: "Agricultura" },
+    { thumbnail: "https://images.unsplash.com/photo-1560493676-04071c5f467b?w=300&q=80", video: "/videos/agricultura3.mp4", category: "Agricultura" },
+    { thumbnail: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=300&q=80", video: "/videos/agricultura4.mp4", category: "Agricultura" },
+    { thumbnail: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=300&q=80", video: "/videos/agricultura5.mp4", category: "Agricultura" },
+
+    // Deporte
+    { thumbnail: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=300&q=80", video: "/videos/deporte1.mp4", category: "Deporte" },
+    { thumbnail: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=300&q=80", video: "/videos/deporte2.mp4", category: "Deporte" },
+    { thumbnail: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=300&q=80", video: "/videos/deporte3.mp4", category: "Deporte" },
+    { thumbnail: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=300&q=80", video: "/videos/deporte4.mp4", category: "Deporte" },
+    { thumbnail: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=300&q=80", video: "/videos/deporte5.mp4", category: "Deporte" },
+
+    // Otros (Paisajes, Ciudad, Naturaleza)
+    { thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&q=80", video: "/videos/otro1.mp4", category: "Otros" },
+    { thumbnail: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&q=80", video: "/videos/otro2.mp4", category: "Otros" },
+    { thumbnail: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=300&q=80", video: "/videos/otro3.mp4", category: "Otros" },
+    { thumbnail: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=300&q=80", video: "/videos/otro4.mp4", category: "Otros" },
+    { thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&q=80", video: "/videos/otro5.mp4", category: "Otros" },
 ];
 
 const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
@@ -114,6 +124,73 @@ export default function IntroAnimation() {
     const [introPhase, setIntroPhase] = useState<AnimationPhase>("scatter");
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
     const containerRef = useRef<HTMLDivElement>(null);
+    const [selectedImage, setSelectedImage] = useState<number | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [isMuted, setIsMuted] = useState(false);
+    const previousVolumeRef = useRef<number>(0.3);
+
+    // Background music
+    useEffect(() => {
+        audioRef.current = new Audio('/audio/background.mp3');
+        audioRef.current.loop = true;
+        audioRef.current.volume = 0.3; // 30% volume
+
+        // Play on user interaction
+        const playAudio = async () => {
+            try {
+                await audioRef.current?.play();
+            } catch (error) {
+                // Audio blocked, will play on first interaction
+            }
+        };
+
+        // Try autoplay first
+        playAudio();
+
+        // Fallback: Play on any user interaction
+        const handleInteraction = () => {
+            if (audioRef.current?.paused) {
+                playAudio();
+            }
+        };
+
+        // Listen for various interaction events
+        document.addEventListener('click', handleInteraction, { once: true });
+        document.addEventListener('keydown', handleInteraction, { once: true });
+        document.addEventListener('touchstart', handleInteraction, { once: true });
+        document.addEventListener('scroll', handleInteraction, { once: true });
+
+        return () => {
+            audioRef.current?.pause();
+            audioRef.current = null;
+            document.removeEventListener('click', handleInteraction);
+            document.removeEventListener('keydown', handleInteraction);
+            document.removeEventListener('touchstart', handleInteraction);
+            document.removeEventListener('scroll', handleInteraction);
+        };
+    }, []);
+
+    // Toggle audio mute
+    const toggleAudioMute = () => {
+        if (audioRef.current) {
+            audioRef.current.muted = !isMuted;
+            setIsMuted(!isMuted);
+        }
+    };
+
+    // Auto-mute background audio when video opens, restore when video closes
+    useEffect(() => {
+        if (audioRef.current) {
+            if (selectedImage !== null) {
+                // Video is open - mute background audio
+                previousVolumeRef.current = audioRef.current.volume;
+                audioRef.current.volume = 0;
+            } else {
+                // Video is closed - restore background audio
+                audioRef.current.volume = previousVolumeRef.current;
+            }
+        }
+    }, [selectedImage]);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -207,7 +284,7 @@ export default function IntroAnimation() {
     }, []);
 
     const scatterPositions = useMemo(() => {
-        return IMAGES.map(() => ({
+        return MEDIA_ITEMS.map(() => ({
             x: (Math.random() - 0.5) * 1500,
             y: (Math.random() - 0.5) * 1000,
             rotation: (Math.random() - 0.5) * 180,
@@ -236,10 +313,48 @@ export default function IntroAnimation() {
 
     return (
         <div ref={containerRef} className="relative w-full h-full bg-white overflow-hidden">
+            {/* Logo - Top Left Corner */}
+            <div className="fixed top-6 left-6 z-50 flex items-center gap-3">
+                {/* Circular radar icon */}
+                <div className="relative w-16 h-16">
+                    {/* Outer glow circles */}
+                    <div className="absolute inset-0 rounded-full bg-red-500 opacity-10"></div>
+                    <div className="absolute inset-2 rounded-full bg-red-500 opacity-20"></div>
+                    {/* Main red circle */}
+                    <div className="absolute inset-4 rounded-full bg-red-600"></div>
+                    {/* Center dot */}
+                    <div className="absolute top-1/2 left-1/2 w-2 h-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-900"></div>
+                    {/* Arrow pointing to top-right */}
+                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 64 64">
+                        <line
+                            x1="32"
+                            y1="32"
+                            x2="50"
+                            y2="14"
+                            stroke="#1F2937"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                        />
+                        {/* Arrowhead */}
+                        <path
+                            d="M 50 14 L 45 16 M 50 14 L 48 19"
+                            stroke="#1F2937"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            fill="none"
+                        />
+                    </svg>
+                </div>
+                {/* Company name */}
+                <div className="text-2xl font-bold tracking-tight text-gray-900 uppercase">
+                    OTRO ANGULO
+                </div>
+            </div>
+
             <div className="flex h-full w-full flex-col items-center justify-center perspective-1000">
 
                 {/* Intro Text */}
-                <div className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2">
+                <div className={`absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2 transition-opacity duration-500 ${selectedImage !== null ? 'opacity-0' : 'opacity-100'}`}>
                     <motion.p
                         initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.6 - morphValue * 1.2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
@@ -252,7 +367,11 @@ export default function IntroAnimation() {
                         initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
                         transition={{ duration: 1, delay: 0.1 }}
-                        className="text-3xl md:text-5xl lg:text-5xl font-semibold tracking-tight text-gray-900 mb-6"
+                        className="text-4xl md:text-6xl lg:text-4xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 mb-6"
+                        style={{
+                            textShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                            letterSpacing: '0.15em'
+                        }}
                     >
                         NEW PERSPECTIVE
                     </motion.h1>
@@ -266,87 +385,6 @@ export default function IntroAnimation() {
                     </motion.p>
                 </div>
 
-                {/* Category Labels - Only visible during circle phase */}
-                {introPhase === "circle" && morphValue < 0.5 && (
-                    <>
-                        {/* Define 4 categories at specific positions around the circle */}
-                        {[
-                            { label: "Bodas", index: 0 },
-                            { label: "Agricultura", index: 5 },
-                            { label: "Deporte", index: 10 },
-                            { label: "Otros", index: 15 }
-                        ].map(({ label, index }) => {
-                            const minDimension = Math.min(containerSize.width, containerSize.height);
-                            const circleRadius = Math.min(minDimension * 0.35, 350);
-                            const circleAngle = (index / TOTAL_IMAGES) * 360;
-                            const circleRad = (circleAngle * Math.PI) / 180;
-
-                            // Image position on the circle
-                            const imageX = Math.cos(circleRad) * circleRadius;
-                            const imageY = Math.sin(circleRad) * circleRadius;
-
-                            // Label position - further out from the circle
-                            const labelRadius = circleRadius + 100;
-                            const labelX = Math.cos(circleRad) * labelRadius;
-                            const labelY = Math.sin(circleRad) * labelRadius;
-
-                            // Line start (from label area)
-                            const lineStartRadius = circleRadius + 90;
-                            const lineStartX = Math.cos(circleRad) * lineStartRadius;
-                            const lineStartY = Math.sin(circleRad) * lineStartRadius;
-
-                            // Line end (near the image)
-                            const lineEndRadius = circleRadius + 20;
-                            const lineEndX = Math.cos(circleRad) * lineEndRadius;
-                            const lineEndY = Math.sin(circleRad) * lineEndRadius;
-
-                            return (
-                                <motion.div
-                                    key={label}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 0.6 - morphValue * 1.2 }}
-                                    transition={{ duration: 0.5, delay: 0.8 }}
-                                    className="absolute pointer-events-none"
-                                    style={{
-                                        left: '50%',
-                                        top: '50%',
-                                    }}
-                                >
-                                    {/* Line pointing to the image */}
-                                    <svg
-                                        className="absolute"
-                                        style={{
-                                            left: 0,
-                                            top: 0,
-                                            width: '100%',
-                                            height: '100%',
-                                            overflow: 'visible'
-                                        }}
-                                    >
-                                        <line
-                                            x1={lineStartX}
-                                            y1={lineStartY}
-                                            x2={lineEndX}
-                                            y2={lineEndY}
-                                            stroke="#1F2937"
-                                            strokeWidth="1.5"
-                                        />
-                                    </svg>
-
-                                    {/* Label */}
-                                    <div
-                                        className="absolute text-[10px] md:text-xs font-medium tracking-[0.25em] text-gray-700 whitespace-nowrap"
-                                        style={{
-                                            transform: `translate(${labelX}px, ${labelY}px) translate(-50%, -50%)`
-                                        }}
-                                    >
-                                        {label}
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
-                    </>
-                )}
 
                 {/* Arc Active Content */}
                 <motion.div
@@ -356,7 +394,12 @@ export default function IntroAnimation() {
                     <p className="text-xs md:text-sm font-light tracking-[0.3em] text-gray-600 mb-4">
                         Cinematografía Aérea
                     </p>
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-semibold text-gray-900 tracking-tight mb-6">
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 mb-6"
+                        style={{
+                            textShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                            letterSpacing: '0.15em'
+                        }}
+                    >
                         NEW PERSPECTIVE
                     </h2>
                     <p className="text-sm md:text-base text-gray-700 max-w-2xl leading-relaxed font-light">
@@ -366,8 +409,19 @@ export default function IntroAnimation() {
                 </motion.div>
 
                 {/* Main Container */}
-                <div className="relative flex items-center justify-center w-full h-full">
-                    {IMAGES.slice(0, TOTAL_IMAGES).map((src, i) => {
+                <motion.div
+                    className="relative flex items-center justify-center w-full h-full"
+                    animate={{
+                        x: selectedImage !== null ? -containerSize.width * 0.25 : 0,
+                        scale: selectedImage !== null ? 0.5 : 1,
+                    }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 80,
+                        damping: 25,
+                    }}
+                >
+                    {MEDIA_ITEMS.slice(0, TOTAL_IMAGES).map((item, i) => {
                         let target = { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1 };
 
                         if (introPhase === "scatter") {
@@ -425,15 +479,84 @@ export default function IntroAnimation() {
                         return (
                             <FlipCard
                                 key={i}
-                                src={src}
+                                src={item.thumbnail}
                                 index={i}
                                 total={TOTAL_IMAGES}
                                 phase={introPhase}
                                 target={target}
+                                onClick={() => setSelectedImage(i)}
                             />
                         );
                     })}
-                </div>
+                </motion.div>
+
+                {/* Video Player - Right Side */}
+                {selectedImage !== null && (
+                    <motion.div
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 100 }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 80,
+                            damping: 25,
+                        }}
+                        className="absolute right-0 top-0 bottom-0 w-1/2 flex items-center justify-center p-8 bg-transparent"
+                    >
+                        <div className="relative w-full h-full max-w-4xl max-h-[85vh]">
+                            {/* Video Player */}
+                            <video
+                                key={selectedImage}
+                                className="w-full h-full object-cover rounded-2xl shadow-2xl bg-transparent"
+                                controls
+                                autoPlay
+                                loop
+                                style={{
+                                    maskImage: 'radial-gradient(ellipse at center, black 75%, transparent 98%)',
+                                    WebkitMaskImage: 'radial-gradient(ellipse at center, black 75%, transparent 98%)',
+                                }}
+                            >
+                                <source src={MEDIA_ITEMS[selectedImage].video} type="video/mp4" />
+                                Tu navegador no soporta la reproducción de video.
+                            </video>
+
+                            {/* Close button */}
+                            <button
+                                onClick={() => setSelectedImage(null)}
+                                className="absolute top-4 right-4 bg-black/70 hover:bg-black/90 text-white px-6 py-3 rounded-full text-sm backdrop-blur-sm transition-all duration-200 font-medium shadow-lg hover:scale-105"
+                            >
+                                ✕ Cerrar
+                            </button>
+
+                            {/* Category label */}
+                            <div className="absolute bottom-4 left-4 bg-black/70 text-white px-4 py-2 rounded-full text-xs backdrop-blur-sm">
+                                {MEDIA_ITEMS[selectedImage].category}
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+
+                {/* Audio Mute Button - Bottom Left Corner */}
+                <button
+                    onClick={toggleAudioMute}
+                    className="fixed bottom-6 left-6 z-50 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full backdrop-blur-sm transition-all duration-200 shadow-lg hover:scale-110"
+                    aria-label={isMuted ? "Activar audio" : "Silenciar audio"}
+                >
+                    {isMuted ? (
+                        // Muted icon
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                            <line x1="23" y1="9" x2="17" y2="15" />
+                            <line x1="17" y1="9" x2="23" y2="15" />
+                        </svg>
+                    ) : (
+                        // Unmuted icon
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                        </svg>
+                    )}
+                </button>
             </div>
         </div>
     );
